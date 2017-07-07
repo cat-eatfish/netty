@@ -102,6 +102,18 @@ public class WrappedUnpooledUnsafeByteBufTest extends BigEndianUnsafeDirectByteB
 
     @Test(expected = IndexOutOfBoundsException.class)
     @Override
+    public void testSetCharSequenceAfterRelease() {
+        super.testSetCharSequenceAfterRelease();
+    }
+
+    @Test(expected = IndexOutOfBoundsException.class)
+    @Override
+    public void testWriteCharSequenceAfterRelease() {
+        super.testWriteCharSequenceAfterRelease();
+    }
+
+    @Test(expected = IndexOutOfBoundsException.class)
+    @Override
     public void testGetReadOnlyDirectDst() {
         super.testGetReadOnlyDirectDst();
     }

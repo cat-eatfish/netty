@@ -36,6 +36,7 @@ import java.nio.channels.FileChannel;
 import java.nio.channels.GatheringByteChannel;
 import java.nio.channels.ScatteringByteChannel;
 import java.nio.channels.WritableByteChannel;
+import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Random;
@@ -2766,6 +2767,22 @@ public abstract class AbstractByteBufTest {
     }
 
     @Test(expected = IllegalReferenceCountException.class)
+    public void testSetCharSequenceAfterRelease() {
+        testSetCharSequenceAfterRelease0(CharsetUtil.US_ASCII);
+        testSetCharSequenceAfterRelease0(CharsetUtil.ISO_8859_1);
+        testSetCharSequenceAfterRelease0(CharsetUtil.UTF_8);
+    }
+
+    private void testSetCharSequenceAfterRelease0(Charset charset) {
+        ByteBuf buffer = buffer();
+        try {
+            releasedBuffer().setCharSequence(0, "Test", charset);
+        } finally {
+            buffer.release();
+        }
+    }
+
+    @Test(expected = IllegalReferenceCountException.class)
     public void testSetBytesAfterRelease4() {
         releasedBuffer().setBytes(0, new byte[8]);
     }
@@ -3083,6 +3100,22 @@ public abstract class AbstractByteBufTest {
     @Test(expected = IllegalReferenceCountException.class)
     public void testWriteZeroAfterRelease() throws IOException {
         releasedBuffer().writeZero(1);
+    }
+
+    @Test(expected = IllegalReferenceCountException.class)
+    public void testWriteCharSequenceAfterRelease() {
+        testWriteCharSequenceAfterRelease0(CharsetUtil.US_ASCII);
+        testWriteCharSequenceAfterRelease0(CharsetUtil.ISO_8859_1);
+        testWriteCharSequenceAfterRelease0(CharsetUtil.UTF_8);
+    }
+
+    private void testWriteCharSequenceAfterRelease0(Charset charset) {
+        ByteBuf buffer = buffer();
+        try {
+            releasedBuffer().writeCharSequence("Test", charset);
+        } finally {
+            buffer.release();
+        }
     }
 
     @Test(expected = IllegalReferenceCountException.class)
